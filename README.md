@@ -4,4 +4,5 @@
 1. Vince Churchill Ankrah
 2. Uncle Jojo Ochir
 3. Gawu-Mensah Sidney Selorm Kofi
-4. Michael Ofori Twum
+4. Essien Ernest Kojo
+5. Michael Ofori Twum
