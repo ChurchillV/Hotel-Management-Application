@@ -3,4 +3,4 @@
 # Group Members:
 1. Vince Churchill Ankrah
 2. Uncle Jojo Ochir
-3. Gawu-Mensah Sidney Selorm
+3. Gawu-Mensah Sidney Selorm Kofi
