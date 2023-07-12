@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <conio.h>
 #include <vector>
@@ -65,7 +64,7 @@ int main() {
                 back_to_menu = true;
                 file.close();
                 break;
-                
+
             case ESC:
                 exit_program = true;
                 back_to_menu = true;
