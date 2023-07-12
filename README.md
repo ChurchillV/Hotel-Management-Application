@@ -7,4 +7,5 @@
 4. Essien Ernest Kojo
 5. Michael Ofori Twum
 6. Iddriss Hamidu Mustapha
-7. Essiedu Daniel 
+7. Essiedu Daniel
+8. Mark Sivan Tamakloe
