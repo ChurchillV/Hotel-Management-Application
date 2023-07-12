@@ -58,8 +58,8 @@ int main() {
                         << "Guest Id: " << data[0] << endl
                         << "Guest Name: " << data[1] << endl
                         << "Contact: " << data[2] << endl
-                        << "Residency Status: " << data[4] << endl
-                        << "Room Id: " << data[3];
+                        << "Residency Status: " << data[3] << endl
+                        << "Room Id: " << data[4];
                 }
                 back_to_menu = true;
                 file.close();
