@@ -11,3 +11,4 @@
 8. Mark Sivan Tamakloe
 9. Awuku Samuel Akoto
 10. Isaac Nana Kwabena Nyame Ofori
+11. Ayomah Richard Arthur
