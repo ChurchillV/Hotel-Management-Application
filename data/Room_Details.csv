@@ -1,10 +1,10 @@
-01,4 in 1,2000,4,Occupied,4,"A421, B567, C786, D654"
-02,4 in 1,2000,4,Occupied,4,"A234, B517, C217, D701 "
-03,3 in 1,3000,3,Occupied,3,"A156, B651, C324"
-04,3 in 1,3000,2,Occupied,3,"A987, B897"
-05,3 in 1,3000,1,Occupied,3,A065
-06,2 in 1,4500,2,Occupied,2,"A578, B875"
-07,2 in 1,4500,1,Occupied,2,A232
-08,1 in 1,6000,0,Unoccupied,1,
-09,1 in 1,6000,1,Occupied,1,A777
-10,1 in 1,6000,0,Unoccupied,1,
+01,4 in 1,2000,4,Occupied,4
+02,4 in 1,2000,4,Occupied,4
+03,3 in 1,3000,3,Occupied,3
+04,3 in 1,3000,2,Occupied,3
+05,3 in 1,3000,1,Occupied,3
+06,2 in 1,4500,2,Occupied,2
+07,2 in 1,4500,1,Occupied,2
+08,1 in 1,6000,0,Unoccupied,1
+09,1 in 1,6000,1,Occupied,1
+10,1 in 1,6000,0,Unoccupied,1
