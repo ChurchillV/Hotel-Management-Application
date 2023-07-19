@@ -9,11 +9,15 @@ int main() {
         << "\nGUEST LOGIN - Press g"
         << "\nEXIT PROGRAM - Press ESC";
     Admin admin1;
-    // Guest guest1("Y678", "Vince Churchill", "678432", "Resident", "10");
-    // admin1.addGuest(guest1);
-    // admin1.searchForGuest("Y678");
-    // vector<string> room_data = {"11", "2 in 1", "4500", "Unoccupied", "0" , "2"};
-    // Room room(room_data);
-    // admin1.addRoom(room);
+    vector<string> data = {"A675", "Yvonne Nartey", "321098", "Resident", "07"};
+    // Guest guest1(data);
+    // admin1.addGuest(data);
+    // Guest guest1;
+    // bool login_success = admin1.adminLogin();
+    // if(login_success) {
+    //     admin1.showAllGuests();
+    // }
+    // else cout << "Oops";
+    admin1.addGuest(data);
     return 0;
 }
