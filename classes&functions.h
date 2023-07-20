@@ -73,7 +73,7 @@ string GUEST_DATA = "data/Guest_Data.csv";
 string ADMIN_DATA = "data/Admin_data.csv";
 
 //CLASSES
-//ROOM CLASS, constructor to create a Room object that the admin can usee, Display Room data
+//ROOM CLASS, constructor to create a Room object that the admin can use, Display Room data
 class Room {
     private:
         string id, type, status, price, occupant_count, capacity;
@@ -176,13 +176,17 @@ class Admin {
     //Display all rooms in the database(Guest_Data.csv)
     void showAllRooms() {
        vector<string> row = getCSVData(ROOM_DATA);
+       cout << "\nDisplaying all Rooms...\n";
         for (int i = 0; i < row.size(); i++) {
             Room room(split(row[i], ','));
             room.displayRoomData();
         }
     }
     //Search for a particular room by id
-    void searchForRoom(string room_id) {
+    void searchForRoom() {
+        string room_id;
+        cout << "\nEnter Room ID: ";
+        cin >> room_id;
         vector<string> row = getCSVData(ROOM_DATA);
         bool isRoomFound = false;
         for (int i = 0; i < row.size(); i++) {
@@ -211,14 +215,45 @@ class Admin {
         if(!areRoomsFound) cout << "\nNo available Rooms. Check again later\n";
     }
     //Add a room to the database
-    void addRoom(Room new_room) {
+    void addRoom() {
+        string id, type, status, price, occupant_count, capacity;
+        cout << "\nEnter Room ID: ";
+        cin >> id;
+        cout << "\nSelect Room Type: \n1 - 1 in 1\n2 - 2 in 1\n3 - 3 in 1\n4 - 4 in 1";
+        int choice = getch();
+        switch (choice)
+        {
+        case 1:
+            type = "1 in 1";
+            capacity = "1";
+            price = "6000";
+            break;
+        case 2:
+            type = "2 in 1";
+            capacity = "2";
+            price = "4500";
+            break;
+        case 3:
+            type = "3 in 1";
+            capacity = "3";
+            price = "3000";
+            break;
+        case 4:
+            type = "4 in 1";
+            capacity = "4";
+            price = "2000";
+            break;
+        default:
+            break;
+        }
+        occupant_count = "0";
         vector <string> row = getCSVData(ROOM_DATA);
-        string new_room_data = new_room.id + "," + new_room.type+ ","  + new_room.price+ ","  + new_room.occupant_count + "," + new_room.status + "," + new_room.capacity;
+        string new_room_data = id + "," + type+ ","  + price+ ","  + occupant_count + "," + status + "," + capacity;
         bool doesRoomExist = false;
         //Check if the room already exists
         for (int i = 0; i < row.size(); i++) {
             vector<string> data = split(row[i], ',');
-            if(data[0] == new_room.id) doesRoomExist = true;
+            if(data[0] == id) doesRoomExist = true;
             break;
         }
         if(doesRoomExist) cout << "\nERROR!!\nRoom already exists. Enter another ID\n";
@@ -233,7 +268,10 @@ class Admin {
         }
     }
     //Remove a room from the database
-    void removeRoom(string room_id) {
+    void removeRoom() {
+        string room_id;
+        cout << "\nEnter room ID: ";
+        cin >> room_id;
         vector<string> row = getCSVData(ROOM_DATA);
         bool isRoomFound = false;
         for(int i = 0; i < row.size(); i++) {
@@ -276,16 +314,25 @@ class Admin {
         if (!isGuestFound) cout << "\nGuest not found. Please try again\n";
     }
     //Add a guest to the database
-    void addGuest(Guest new_guest) {
+    void addGuest() {
+        string name, id, contact_info, residency_status, room_id;
+        cout << "\nEnter Guest Name: ";
+        cin >> name;
+        cout << "Enter Guest contact info: ";
+        cin >> contact_info;
+        cout << "Enter Guest ID: ";
+        cin >> id;
+        cout << "Enter Room ID: ";
+        cin >> room_id;
+        residency_status = "Resident";
         vector <string> room_data = getCSVData(ROOM_DATA);
-        string new_guest_data = new_guest.id + "," + new_guest.name+ ","  + new_guest.contact_info+ ","  + new_guest.residency_status + ",";
+        string new_guest_data = id + "," + name + ","  + contact_info + ","  + residency_status + "," + room_id;
         bool isRoomFound = false, isRoomFull = false;
-        string roomID;
         for (int i = 0; i < room_data.size(); i++) {
             vector<string> data = split(room_data[i], ',');
-            if(data[0] == new_guest.room_id) {
+            if(data[0] == room_id) {
                 isRoomFound = true; 
-                roomID = data[0];
+                room_id = data[0];
                 //Check if the room has reached its capacity
                 if(stoi(data[3]) == stoi(data[5])) {isRoomFull = true;}
                 break;
@@ -295,7 +342,7 @@ class Admin {
         else if(isRoomFull) cout << "\nRoom is currently full. Please check another room";
         else {
             vector<string> guest_details = getCSVData(GUEST_DATA);
-            guest_details.push_back(new_guest_data + roomID);
+            guest_details.push_back(new_guest_data);
             ofstream outStream(GUEST_DATA);
             //Add the new guest to the guest database
             for (int i = 0; i < guest_details.size(); i++) outStream << guest_details[i] << endl;
@@ -305,12 +352,12 @@ class Admin {
             string updatedRoomInfo, updated_occupant_count, updated_status;
             for(int i = 0; i < room_data.size(); i++) {
                 vector<string> data = split(room_data[i], ',');
-                if(data[0] == roomID) {
+                if(data[0] == room_id) {
                     updated_occupant_count = update(data[3], 1);
                     updatedRoomInfo = data[0] + "," + data[1] + "," + data[2] + "," + updated_occupant_count + ",";
-                    updated_status = (updated_occupant_count == data[5]) ? "Occupied" : "Unoccupied";
+                    updated_status = "Occupied";
                     updatedRoomInfo += updated_status + "," + data[5];
-                    deleteRow(room_data,roomID);
+                    deleteRow(room_data,room_id);
                     room_data.push_back(updatedRoomInfo);
                     break;
                 }

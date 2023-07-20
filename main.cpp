@@ -18,6 +18,6 @@ int main() {
     //     admin1.showAllGuests();
     // }
     // else cout << "Oops";
-    admin1.addGuest(data);
+    admin1.addGuest();
     return 0;
 }
