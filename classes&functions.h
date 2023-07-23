@@ -6,6 +6,8 @@
 #include <sstream>
 #include <cstdio>
 #include <ctime>
+#include <windows.h>
+#include <iomanip>
 using namespace std;
 
 //FUNCTION DEFINITIONS
@@ -52,21 +54,6 @@ void deleteRow(vector<string> &row, string searchItem) {
     }
 }
 
-// //Function to perform operations on strings, returns a string
-// string update(string& value, int amount) {
-//     //Convert string to integer
-//     stringstream ss(value);
-//     int num;
-//     ss >> num;
-//     //Change value
-//     num += amount;
-//     //Convert back to string
-//     stringstream  holder;
-//     holder << num;
-//     value = holder.str();
-//     return value;
-// }
-
 //Function to get the current date (Used in addGuest function)
 string getCurrentDate() {
     // Get the current time
@@ -79,6 +66,35 @@ string getCurrentDate() {
     return std::string(buffer);
 }
 
+void changeConsoleColor(int colorCode) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, colorCode);
+}
+
+void loadingBarAnimation() {
+    const int totalProgress = 100; // Total progress value (e.g., 100%)
+    const int barWidth = 50; // Width of the loading bar in characters
+
+    for (int progress = 0; progress <= totalProgress; ++progress) {
+        int completedWidth = barWidth * progress / totalProgress;
+
+        cout << "\r[";
+        for (int i = 0; i < barWidth; ++i) {
+            if (i < completedWidth) {
+                cout << "=";
+            } else {
+                cout << " ";
+            }
+        }
+        cout << "] " << progress << "%";
+        cout.flush();
+
+        // Add a small delay to control the speed of the animation
+        Sleep(5);
+    }
+
+    std::cout << std::endl;
+}
 //FILE PATH FOR ROOM DATA CSV FILE
 string ROOM_DATA = "data/Room_Details.csv";
 //FILE PATH FOR GUEST DATA CSV FILE
@@ -100,13 +116,42 @@ class Room {
             status = room_data[4];
         }
         void displayRoomData() {
-            cout << "\n----------------------------\n"
-                << "Room Id: " << id << endl
-                << "Room Type: " << type << endl
-                << "Room Price: " << price << endl
-                << "Occupant Count: " << occupant_count << endl
-                << "Status: " << status << endl;
-        }
+            string border = "+--------------+-----------------------------------+";
+            Sleep(900);
+            cout << left; // Set left alignment for the data
+            cout << border << endl;
+            cout << "| Room Id      | " << setw(34) << id << "|" << endl;
+            // Set the console text color based on the room type
+            if (type == "Single") {
+                changeConsoleColor(8); // Gray color
+            } else if (type == "Double") {
+                changeConsoleColor(3); // Cyan color
+            }else if (type == "Triple") {
+                changeConsoleColor(13); // Light Purple color
+            }else {
+                changeConsoleColor(6); // Yellow color
+            }
+            cout << border << endl;
+            cout << "| Room Type    | " << setw(34) << type << "|" << endl;
+            cout << border << endl;
+            // Reset the console text color to the default (white)
+            changeConsoleColor(15);
+            cout << "| Price        | " << setw(34) << price << "|" << endl;
+            cout << border << endl;
+            cout << "| Occupant No. | " << setw(34) << occupant_count << "|" << endl;
+            cout << border << endl;
+             // Set the console text color based on the status
+            if (status == "Unavailable") {
+                changeConsoleColor(12); // Red color
+            } else if (status == "Available") {
+                changeConsoleColor(10); // Green color
+            }
+            cout << border << endl;
+            cout << "| Status       | " << setw(34) << status << "|" << endl;
+            cout << border << endl << endl;
+            // Reset the console text color to the default (white)
+            changeConsoleColor(15);
+                }
         friend class Admin;
 };
 
@@ -124,13 +169,24 @@ class Guest {
         };
         Guest() {};
         void getDetails() {
-            cout << "\n----------------------------\n"
-            << "\nGuest Id: " << id
-            << "\nGuest Name: " << name
-            << "\nContact " << contact_info
-            << "\nRoom Id: " << room_id
-            << "\nArrival Date: " << arrival_date << endl;
+            Sleep(900);
+            cout << left; // Set left alignment for the data
+            cout << "+---------------+-----------------------------------+" << endl;
+            cout << "| Guest Id      | " << setw(34) << id << "|" << endl;
+            changeConsoleColor(14);
+            cout << "+---------------+-----------------------------------+" << endl;
+            cout << "| Guest Name    | " << setw(34) << name << "|" << endl;
+            cout << "+---------------+-----------------------------------+" << endl;
+            changeConsoleColor(15);
+            cout << "| Contact Info  | " << setw(34) << contact_info << "|" << endl;
+            cout << "+---------------+-----------------------------------+" << endl;
+            cout << "| Room Id       | " << setw(34) << room_id << "|" << endl;
+            cout << "+---------------+-----------------------------------+" << endl;
+            cout << "| Arrival Date  | " << setw(34) << arrival_date << "|" << endl;
+            cout << "+---------------+-----------------------------------+" << endl << endl;
         }
+
+        
         //Function to log the guest into the application
         bool guestLogin() {
             bool login_status = false;
@@ -147,8 +203,16 @@ class Guest {
                     break;
                 }
             }
-            if(!login_status) cout << "Invalid Login! Please try again\n";
-            else cout << "Welcome " << guest_name;
+            if(!login_status) {
+                changeConsoleColor(12); // Red color
+                cout << "Invalid Login! Please try again\n";
+            }
+            else {
+                changeConsoleColor(10); // Green color
+                cout << "Welcome " << guest_name;
+            }
+            // Reset the console text color to the default (white)
+            changeConsoleColor(15);
             return login_status;
         }
         friend class Admin;
@@ -279,9 +343,10 @@ class Admin {
 //Function to get the guest's preferred room type
     void getRoomByType() {
         int choice;
-        bool isValidChoice = true;
+        bool isValidChoice;
         string room_type;
         do {
+        isValidChoice = true;
         cout << "\nSelect preferred Room Type: \n1 - Single\n2 - Double\n3 - Triple\n4 - Quadruple\nYour Choice: ";
         cin >> choice;
         switch (choice) {
@@ -306,6 +371,8 @@ class Admin {
         }
         vector<string> row = getCSVData(ROOM_DATA);
         bool areRoomsFound = false;
+        cout << "\nSearching for Available Rooms...\n";
+        loadingBarAnimation();
         for (int i = 0; i < row.size(); i++) {
             vector<string> data = split(row[i], ',');
             //If the room is unoccupied or hasn't reached it's limit
@@ -341,7 +408,9 @@ class Admin {
             ofstream outStream(ROOM_DATA);
             for(int i = 0; i < row.size(); i++) outStream << row[i] << endl;
             outStream.close();
+            changeConsoleColor(10);
             cout << "\nRoom removed successfully";
+            changeConsoleColor(7);
         }
     }
 
@@ -349,6 +418,7 @@ class Admin {
     //Display all guests in the database (Guest_Data.csv)
     void showAllGuests() {
         vector<string> row = getCSVData(GUEST_DATA);
+        cout << "Retrieving Guest Data...\n\n";
         for (int i = 0; i < row.size(); i++) {
             Guest guest(split(row[i], ','));
             guest.getDetails();
@@ -380,6 +450,7 @@ class Admin {
     //Add a guest to the database
     void addGuest() {
         string f_name, l_name, name, id, contact_info, arrival_date, room_id, occupant_no;
+        vector<string> guest_info;
         int rm_id;
         cout << "\nFirst name: ";
         cin >> f_name;
@@ -402,6 +473,12 @@ class Admin {
         cout << "Enter occupant number: ";
         cin >> occupant_no;
         arrival_date = getCurrentDate();
+        guest_info.push_back(id);
+        guest_info.push_back(name);
+        guest_info.push_back(contact_info);
+        guest_info.push_back(room_id);
+        guest_info.push_back(arrival_date);
+        Guest new_guest(guest_info);
         vector <string> room_data = getCSVData(ROOM_DATA);
         string new_guest_data = id + "," + name + ","  + contact_info + "," + room_id + "," + arrival_date;
         bool isRoomFound = false ,isRoomFull = false;
@@ -415,8 +492,16 @@ class Admin {
                 break;
             }
         }
-        if(!isRoomFound) cout << "ERROR!!\nRoom not found. Kindly make sure you entered the right ID\n";
-        else if(isRoomFull) cout << "\nRoom is currently Full. Please try again later\n";
+        if(!isRoomFound) {
+            changeConsoleColor(12);
+            cout << "ERROR!!\nRoom not found. Kindly make sure you entered the right ID\n";
+            changeConsoleColor(7);
+        }
+        else if(isRoomFull) {
+            changeConsoleColor(6);
+            cout << "\nRoom is currently Full. Please try again later\n";
+            changeConsoleColor(7);
+        }
         else {
             vector<string> guest_details = getCSVData(GUEST_DATA);
             guest_details.push_back(new_guest_data);
@@ -440,14 +525,22 @@ class Admin {
             ofstream room_file(ROOM_DATA);
             for(int i = 0; i < room_data.size(); i++) room_file << room_data[i] << endl;
             room_file.close();
+            cout << "\nRegistering New Guest...\n";
+            loadingBarAnimation();
+            new_guest.getDetails();
+            changeConsoleColor(10);
             cout << "\nGuest successfully Added\n";
+            changeConsoleColor(7);
         }
     }
     //Remove a guest from the database
     void removeGuest() {
-        string guest_name, guest_id;
-        cout << "Enter Guest Name: ";
-        cin >> guest_name;
+        string guest_name, f_name, l_name, guest_id;
+        cout << "Enter Guest's First name: ";
+        cin >> f_name;
+        cout << "Enter Guest's Last name: ";
+        cin >> l_name;
+        guest_name = l_name + " " + f_name;
         cout << "Enter Guest ID: ";
         cin >> guest_id;
         vector<string> guest_data = getCSVData(GUEST_DATA);
@@ -456,13 +549,24 @@ class Admin {
         for(int i = 0; i < guest_data.size(); i++) {
             vector<string> data = split(guest_data[i], ',');
             if(data[0] == guest_id && data[1] == guest_name) {
+                Guest guest(data);
                 isGuestFound = true; 
                 roomID = data[3]; 
+                changeConsoleColor(10);
+                cout << "Guest Identified" << endl;
+                changeConsoleColor(7);
+                guest.getDetails();
                 break;
             }
         }
-        if(!isGuestFound) cout << "\nERROR!!\nGuest not found. Kindly make sure you entered the right ID\n";
+        if(!isGuestFound){
+            changeConsoleColor(12);
+            cout << "\nERROR!!\nGuest not found. Kindly make sure you entered the right ID\n";
+            changeConsoleColor(7);
+        }
         else {
+            cout << "\nPress any key to delete Guest\n" << endl;
+            int pause = getch();
             deleteRow(guest_data, guest_id);
             string updatedRoomInfo;
             ofstream guest_data_update(GUEST_DATA);
@@ -481,7 +585,9 @@ class Admin {
             ofstream room_file(ROOM_DATA);
             for(int i = 0; i < room_data.size(); i++) {room_file << room_data[i] << endl;}
             room_file.close();
+            changeConsoleColor(10);
             cout << "\nGuest removed successfully";
+            changeConsoleColor(7);
         }
     }
 };
