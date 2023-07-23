@@ -1,10 +1,10 @@
-01,4 in 1,2000,4,Occupied,4
-02,4 in 1,2000,4,Occupied,4
-03,3 in 1,3000,3,Occupied,3
-04,3 in 1,3000,2,Occupied,3
-05,3 in 1,3000,1,Occupied,3
-06,2 in 1,4500,2,Occupied,2
-08,1 in 1,6000,0,Unoccupied,1
-09,1 in 1,6000,1,Occupied,1
-10,1 in 1,6000,0,Unoccupied,1
-07,2 in 1,4500,2,Occupied,2
+01,Quadruple,4000,4,Unavailable
+02,Quadruple,4000,4,Unavailable
+03,Triple,3000,3,Unavailable
+04,Triple,3000,2,Unavailable
+05,Triple,3000,1,Unavailable
+06,Double,2000,2,Unavailable
+09,Double,2000,0,Available
+11,Triple,3000,0,Available
+07,Double,2000,4,Unavailable
+10,Single,1000,1,Unavailable
