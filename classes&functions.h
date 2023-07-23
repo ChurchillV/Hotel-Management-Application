@@ -8,8 +8,42 @@
 #include <ctime>
 #include <windows.h>
 #include <iomanip>
+#include <chrono>
+#include <thread>
 using namespace std;
 
+//Function to change the colour of the console
+void changeConsoleColor(int colorCode) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, colorCode);
+}
+
+void intro() {
+    changeConsoleColor(6);
+    cout << R"( 
+                                                 _____________   
+                                                |             |
+                                                |     ________|       ____            ____
+                                                |    |               |    |          |    |
+                                                |    |           ____|    |____  ____|    |_____
+                                                |    |          |____      ____||____      _____|
+                                                |    |________       |    |          |    |
+                                                |             |      |____|          |____|
+                                                |_____________|
+                                                 _____      _____   _______________   ______________   _____________   _____
+                                                |     |    |     | |               | |              | |             | |     |
+                                                |     |    |     | |     _____     | |____      ____| |      _______| |     |
+                                                |     |____|     | |    |     |    |      |    |      |     |_______  |     |
+                                                |                | |    |     |    |      |    |      |      _______| |     |
+                                                |      ____      | |    |     |    |      |    |      |     |         |     |
+                                                |     |    |     | |    |_____|    |      |    |      |     |_______  |     |_______
+                                                |     |    |     | |               |      |    |      |             | |             |
+                                                |_____|    |_____| |_______________|      |____|      |_____________| |_____________|
+    )" << endl;
+    cout << endl;
+    cout << "\n\n\t\tBY: GROUP I";
+    changeConsoleColor(7);
+}
 //FUNCTION DEFINITIONS
 //Function to separate the data obtained from each row
 vector<string> split(string& text, char delimiter){
@@ -66,11 +100,7 @@ string getCurrentDate() {
     return std::string(buffer);
 }
 
-void changeConsoleColor(int colorCode) {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole, colorCode);
-}
-
+//Loading Bar animation 
 void loadingBarAnimation() {
     const int totalProgress = 100; // Total progress value (e.g., 100%)
     const int barWidth = 50; // Width of the loading bar in characters
@@ -111,7 +141,7 @@ class Room {
         Room(vector<string> room_data) {
             id = room_data[0];
             type = room_data[1];
-            price = room_data[2];
+            price = room_data[2] + "/night";
             occupant_count = room_data[3];
             status = room_data[4];
         }
@@ -519,7 +549,9 @@ class Admin {
             guest_details.push_back(new_guest_data);
             ofstream outStream(GUEST_DATA);
             //Add the new guest to the guest database
-            for (int i = 0; i < guest_details.size(); i++) outStream << guest_details[i] << endl;
+            for (int i = 0; i < guest_details.size(); i++) {
+                outStream << guest_details[i] << endl;
+            }
             outStream.close();
             //Update Room database
             room_data = getCSVData(ROOM_DATA);

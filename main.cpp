@@ -3,6 +3,7 @@
 using namespace std;
 
 int main() {
+    intro(); //Program title
     cout << "\nHOTEL MANAGEMENT APPLICATION"
         << "\n---------------------------------"
         << "\nADMIN LOGIN - Press a"
@@ -15,7 +16,7 @@ int main() {
     Guest guest1;
     bool login_success = admin1.adminLogin();
     if(login_success) {
-        admin1.searchForGuest();
+        admin1.addGuest();
     }
     else cout << "Oops";
     return 0;
