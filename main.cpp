@@ -15,7 +15,7 @@ int main() {
     Guest guest1;
     bool login_success = admin1.adminLogin();
     if(login_success) {
-        admin1.removeGuest();
+        admin1.searchForGuest();
     }
     else cout << "Oops";
     return 0;

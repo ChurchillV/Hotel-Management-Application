@@ -7,6 +7,6 @@
 11,Triple,3000,0,Available
 07,Double,2000,4,Unavailable
 10,Single,1000,1,Unavailable
-12,Single,1000,0,Available
-13,Single,1000,0,Available
 09,Double,2000,0,Available
+13,Single,1000,1,Unavailable
+12,Single,1000,1,Unavailable

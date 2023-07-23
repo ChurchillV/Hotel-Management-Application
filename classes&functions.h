@@ -249,6 +249,7 @@ class Admin {
     void showAllRooms() {
        vector<string> row = getCSVData(ROOM_DATA);
        cout << "\nDisplaying all Rooms...\n";
+       loadingBarAnimation();
         for (int i = 0; i < row.size(); i++) {
             Room room(split(row[i], ','));
             room.displayRoomData();
@@ -261,6 +262,8 @@ class Admin {
         cin >> room_id;
         vector<string> row = getCSVData(ROOM_DATA);
         bool isRoomFound = false;
+        cout << "\nSearching for Room " << room_id << " ...\n";
+        loadingBarAnimation();
         for (int i = 0; i < row.size(); i++) {
             if (split(row[i], ',')[0] == room_id) {
                 isRoomFound = true;
@@ -426,26 +429,35 @@ class Admin {
     }
     //Search for a guest based on their Id and Name
     void searchForGuest() {
-        string name, id;
-        cout << "Enter Guest name: ";
-        getline(cin, name);
-        fflush(stdin);
-        cin.ignore();
+        string name,f_name, l_name, id;
+        cout << "\nEnter Guest's first name: ";
+        cin >> f_name;
+        cout << "Enter Guest's last name: ";
+        cin>> l_name;
+        name = l_name + " " + f_name;
+        // fflush(stdin);
+        // cin.ignore();
         cout << "Enter Guest ID: ";
         cin >> id;
-        fflush(stdin);
+        cout << "\nSearching for Guest...";
+        // fflush(stdin);
         vector<string> row = getCSVData(GUEST_DATA);
         bool isGuestFound = false;
         for (int i = 0; i < row.size(); i++) {
             vector<string> data = split(row[i], ',');
             if (data[0] == id && data[1] == name) {
                 isGuestFound = true;
+                loadingBarAnimation();
                 Guest guest(data);
                 guest.getDetails();
                 break;
             }
         }
-        if (!isGuestFound) cout << "\nGuest not found. Please try again\n";
+        if (!isGuestFound) {
+            changeConsoleColor(12);
+            cout << "\nGuest not found. Please try again\n";
+            changeConsoleColor(7);
+            }
     }
     //Add a guest to the database
     void addGuest() {
@@ -546,6 +558,7 @@ class Admin {
         vector<string> guest_data = getCSVData(GUEST_DATA);
         string roomID;
         bool isGuestFound = false;
+        loadingBarAnimation();
         for(int i = 0; i < guest_data.size(); i++) {
             vector<string> data = split(guest_data[i], ',');
             if(data[0] == guest_id && data[1] == guest_name) {
@@ -567,6 +580,7 @@ class Admin {
         else {
             cout << "\nPress any key to delete Guest\n" << endl;
             int pause = getch();
+            loadingBarAnimation();
             deleteRow(guest_data, guest_id);
             string updatedRoomInfo;
             ofstream guest_data_update(GUEST_DATA);
