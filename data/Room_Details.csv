@@ -12,7 +12,6 @@
 22,Triple,3000,0,Available
 11,Triple,3000,0,Available
 15,Triple,3000,0,Available
-06,Double,2000,2,Unavailable
 07,Double,2000,4,Unavailable
 09,Double,2000,2,Unavailable
 23,Double,2000,0,Available
@@ -21,6 +20,7 @@
 13,Single,1000,1,Unavailable
 12,Single,1000,1,Unavailable
 26,Single,1000,0,Available
-27,Single,1000,0,Available
 28,Single,1000,0,Available
 24,Double,2000,1,Unavailable
+27,Single,1000,1,Unavailable
+06,Double,2000,1,Unavailable

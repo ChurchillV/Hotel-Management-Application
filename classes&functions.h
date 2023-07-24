@@ -8,8 +8,6 @@
 #include <ctime>
 #include <windows.h>
 #include <iomanip>
-#include <chrono>
-#include <thread>
 using namespace std;
 
 //Function to change the colour of the console
@@ -21,24 +19,24 @@ void changeConsoleColor(int colorCode) {
 void intro() {
     changeConsoleColor(6);
     cout << R"( 
-                                                 _____________   
-                                                |             |
-                                                |     ________|       ____            ____
-                                                |    |               |    |          |    |
-                                                |    |           ____|    |____  ____|    |_____
-                                                |    |          |____      ____||____      _____|
-                                                |    |________       |    |          |    |
-                                                |             |      |____|          |____|
-                                                |_____________|
-                                                 _____      _____   _______________   ______________   _____________   _____
-                                                |     |    |     | |               | |              | |             | |     |
-                                                |     |    |     | |     _____     | |____      ____| |      _______| |     |
-                                                |     |____|     | |    |     |    |      |    |      |     |_______  |     |
-                                                |                | |    |     |    |      |    |      |      _______| |     |
-                                                |      ____      | |    |     |    |      |    |      |     |         |     |
-                                                |     |    |     | |    |_____|    |      |    |      |     |_______  |     |_______
-                                                |     |    |     | |               |      |    |      |             | |             |
-                                                |_____|    |_____| |_______________|      |____|      |_____________| |_____________|
+                                     _____________   
+                                    |             |
+                                    |     ________|       ____            ____
+                                    |    |               |    |          |    |
+                                    |    |           ____|    |____  ____|    |_____
+                                    |    |          |____      ____||____      _____|
+                                    |    |________       |    |          |    |
+                                    |             |      |____|          |____|
+                                    |_____________|
+                                     _____      _____   _______________   ______________   _____________   _____
+                                    |     |    |     | |               | |              | |             | |     |
+                                    |     |    |     | |     _____     | |____      ____| |      _______| |     |
+                                    |     |____|     | |    |     |    |      |    |      |     |_______  |     |
+                                    |                | |    |     |    |      |    |      |      _______| |     |
+                                    |      ____      | |    |     |    |      |    |      |     |         |     |
+                                    |     |    |     | |    |_____|    |      |    |      |     |_______  |     |_______
+                                    |     |    |     | |               |      |    |      |             | |             |
+                                    |_____|    |_____| |_______________|      |____|      |_____________| |_____________|
     )" << endl;
     cout << endl;
     cout << "\n\n\t\tBY: GROUP I";
@@ -97,7 +95,7 @@ string getCurrentDate() {
     // Format the current time as a string with the desired format
     strftime(buffer, sizeof(buffer), "%d-%m-%Y", localtime(&now));
     // Convert the buffer to a string and return it
-    return std::string(buffer);
+    return string(buffer);
 }
 
 //Loading Bar animation 
@@ -220,11 +218,14 @@ class Guest {
         //Function to log the guest into the application
         bool guestLogin() {
             bool login_status = false;
-            cout << "\nEnter name: ";
-            string guest_name, guest_id;
-            getline(cin, guest_name);
+            cout << "\nEnter First name: ";
+            string guest_name,f_name, l_name, guest_id;
+            cin >> f_name;
+            cout << "\nEnter Last name: ";
+            cin >> l_name;
             cout << "\nEnter ID: ";
             cin >> guest_id;
+            guest_name = l_name + " " + f_name;
             vector<string> guest_database = getCSVData(GUEST_DATA);
             for(int i = 0; i < guest_database.size(); i++) {
                 vector<string> guest_data = split(guest_database[i], ',');
@@ -245,6 +246,31 @@ class Guest {
             changeConsoleColor(15);
             return login_status;
         }
+        bool guestLogin(string name, string ID) {
+            bool login_status = false;
+            vector<string> guest_database = getCSVData(GUEST_DATA);
+            for(int i = 0; i < guest_database.size(); i++) {
+                vector<string> guest_data = split(guest_database[i], ',');
+                if (guest_data[0] == ID && guest_data[1] == name) {
+                    changeConsoleColor(10);
+                    cout << "Welcome " << name;
+                    login_status = true;
+                    changeConsoleColor(7);
+                    break;
+                }
+            }
+            if(!login_status) {
+                changeConsoleColor(12); // Red color
+                cout << "Invalid Login! Please try again\n";
+            }
+            else {
+                changeConsoleColor(10); // Green color
+                cout << "Welcome " << name;
+            }
+            // Reset the console text color to the default (white)
+            changeConsoleColor(15);
+            return login_status;
+        }
         friend class Admin;
 };
 
@@ -258,7 +284,7 @@ class Admin {
         bool login_status = false;
         cout << "\nEnter Admin ID: ";
         string admin_id, admin_password;
-        getline(cin, admin_id);
+        cin >> admin_id;
         cout << "\nEnter password: ";
         cin >> admin_password;
         vector<string> admin_database = getCSVData(ADMIN_DATA);
@@ -458,6 +484,26 @@ class Admin {
         }
     }
     //Search for a guest based on their Id and Name
+    void searchForGuest(string name, string ID) {
+        vector<string> row = getCSVData(GUEST_DATA);
+        bool isGuestFound = false;
+        for (int i = 0; i < row.size(); i++) {
+            vector<string> data = split(row[i], ',');
+            if (data[0] == ID && data[1] == name) {
+                isGuestFound = true;
+                loadingBarAnimation();
+                Guest guest(data);
+                guest.getDetails();
+                break;
+            }
+        }
+        if (!isGuestFound) {
+            changeConsoleColor(12);
+            cout << "\nGuest not found. Please try again\n";
+            changeConsoleColor(7);
+            }
+    }
+
     void searchForGuest() {
         string name,f_name, l_name, id;
         cout << "\nEnter Guest's first name: ";
@@ -614,6 +660,56 @@ class Admin {
             int pause = getch();
             loadingBarAnimation();
             deleteRow(guest_data, guest_id);
+            string updatedRoomInfo;
+            ofstream guest_data_update(GUEST_DATA);
+            for(int i = 0; i < guest_data.size(); i++) {guest_data_update << guest_data[i] << endl;}
+            vector<string> room_data = getCSVData(ROOM_DATA);
+            for(int i = 0; i < room_data.size(); i++) {
+                vector<string> data = split(room_data[i], ',');
+                if(data[0] == roomID) {
+                    updatedRoomInfo = data[0] + "," + data[1] + "," + data[2] + "," + "0,Available";
+                    deleteRow(room_data,roomID);
+                    room_data.push_back(updatedRoomInfo);
+                    break;
+                }
+            }
+            //Update Room database
+            ofstream room_file(ROOM_DATA);
+            for(int i = 0; i < room_data.size(); i++) {room_file << room_data[i] << endl;}
+            room_file.close();
+            changeConsoleColor(10);
+            cout << "\nGuest removed successfully";
+            changeConsoleColor(7);
+        }
+    }
+    void removeGuest(string name, string ID) {
+        vector<string> guest_data = getCSVData(GUEST_DATA);
+        string roomID;
+        bool isGuestFound = false;
+        loadingBarAnimation();
+        for(int i = 0; i < guest_data.size(); i++) {
+            vector<string> data = split(guest_data[i], ',');
+            if(data[0] == ID && data[1] == name) {
+                Guest guest(data);
+                isGuestFound = true; 
+                roomID = data[3]; 
+                changeConsoleColor(10);
+                cout << "Guest Identified" << endl;
+                changeConsoleColor(7);
+                guest.getDetails();
+                break;
+            }
+        }
+        if(!isGuestFound){
+            changeConsoleColor(12);
+            cout << "\nERROR!!\nGuest not found. Kindly make sure you entered the right ID\n";
+            changeConsoleColor(7);
+        }
+        else {
+            cout << "\nPress any key to delete Guest\n" << endl;
+            int pause = getch();
+            loadingBarAnimation();
+            deleteRow(guest_data, ID);
             string updatedRoomInfo;
             ofstream guest_data_update(GUEST_DATA);
             for(int i = 0; i < guest_data.size(); i++) {guest_data_update << guest_data[i] << endl;}
