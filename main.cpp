@@ -2,6 +2,23 @@
 #include "classes&functions.h"
 #include <conio.h>
 
+/*
+  ```````#############################   GROUP I   ############################# 
+
+                        1  - ANKRAH Vince Churchill          - 7092021
+                        2  - OCHIR Uncle Jojo                - 7104821
+                        3  - MUSTAPHA Iddriss Hamidu         - 7103921
+                        4  - ESSIEN Ernest Kojo              - 7098521
+                        5  - TIJANI Hassan Cissey            - 7110021
+                        6  - ESSIEDU Daniel                  - 7098421
+                        7  - OFORI Isaac Nana Kwabena Nyame  - 7105621
+                        8  - OFORI Twum Michael              - 7105821
+                        9  - TAMAKLOE Mark Sivan             - 7109421
+                        10 - AYOMAH Richard Arthur           - 7093921
+                        11 - GAWU-MENSAH Sidney Selorm Kofi  - 7098821
+                        12 - AWUKU Samuel Akoto              - 7093721
+*/
+
 int main() {
     bool isProgramRunning, adminMenu, guestMenu;
     do {
@@ -40,7 +57,7 @@ int main() {
                 switch (choice) {
                 case '1':
                     admin1.showAllRooms();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -48,7 +65,7 @@ int main() {
 
                 case '2':
                     admin1.searchForRoom();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -56,7 +73,7 @@ int main() {
 
                 case '3':
                     admin1.searchAvailableRooms();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -64,7 +81,7 @@ int main() {
 
                 case '4':
                     admin1.addRoom();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -72,7 +89,7 @@ int main() {
 
                 case '5':
                     admin1.removeRoom();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -80,7 +97,7 @@ int main() {
 
                 case '6':
                     admin1.showAllGuests();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -88,7 +105,7 @@ int main() {
 
                 case '7':
                     admin1.searchForGuest();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -96,7 +113,7 @@ int main() {
 
                 case '8':
                     admin1.addRoom();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -104,7 +121,7 @@ int main() {
 
                 case '9':
                     admin1.removeGuest();
-                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
                     else if (choice == 'y') adminMenu = true;
@@ -127,7 +144,7 @@ int main() {
                     break;
 
                 default:
-                    std::cout<< "You entered an invalid option, please try again."<< endl;
+                    std::cout<< "\nYou entered an invalid option, please try again."<< endl;
                     adminMenu = true;
                     break;
                 }
@@ -153,9 +170,9 @@ int main() {
                 {
                     case '1':
                         std::cout << "These are the rooms available:"
-                        << "\n---------------------------------------";
+                        << "\n---------------------------------------\n";
                         admin1.searchAvailableRooms();
-                        std::cout << "Perform another action?(y/n [Back to main menu])\n > >";
+                        std::cout << "\nPerform another action?(y/n [Back to main menu])\n > >";
                         choice = getch();
                         if(choice == 'n') isProgramRunning = true;
                         else if (choice == 'y') guestMenu = true;
@@ -171,7 +188,7 @@ int main() {
                         login_success = guest1.guestLogin(name, ID);
                         if(login_success){
                         admin1.searchForGuest(name, ID);
-                        std::cout << "Perform another action?(y/n [Back to main menu])\n > >";
+                        std::cout << "\nPerform another action?(y/n [Back to main menu])\n > >";
                         choice = getch();
                         if(choice == 'n') isProgramRunning = true;
                         else if (choice == 'y') guestMenu = true;
@@ -189,7 +206,7 @@ int main() {
                         login_success = guest1.guestLogin(name, ID);
                         if(login_success){
                         admin1.removeGuest(name, ID);
-                        std::cout << "Perform another action?(y/n [Back to main menu])\n > >";
+                        std::cout << "\nPerform another action?(y/n [Back to main menu])\n > >";
                         choice = getch();
                         if(choice == 'n') isProgramRunning = true;
                         else if (choice == 'y') guestMenu = true;

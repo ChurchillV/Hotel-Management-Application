@@ -53,17 +53,17 @@ void intro() {
 void outro() {
     changeConsoleColor(6);
     cout << R"(
-                                     ______________  ______     ______  _______________     _____
-                                    |              | \     \   /     / |               |   |     |
-                                    |     ____     |  \     \-/     /  |     __________|   |     |
-                                    |    |    |    |   \           /   |    |              |     |  
-                                    |    |____|    |    \         /    |    |__________    |     |
-                                    |             /      \       /     |               |   |     |
-                                    |     ____    \       |     |      |     __________|   |     |
-                                    |    |    |    |      |     |      |    |              |     |
-                                    |    |____|    |      |     |      |    |__________    |_____|
-                                    |              |      |     |      |               |    _____ 
-                                    |______________|      |_____|      |_______________|   |_____|
+                                     ______________  _____      _____   _______________     _____
+                                    |              | \    \    /    /  |               |   |     |
+                                    |     ____     |  \    \  /    /   |     __________|   |     |
+                                    |    |    |    |   \    \/    /    |    |              |     |  
+                                    |    |____|    |    \        /     |    |__________    |     |
+                                    |             /      \      /      |               |   |     |
+                                    |     ____    \       |    |       |     __________|   |     |
+                                    |    |    |    |      |    |       |    |              |     |
+                                    |    |____|    |      |    |       |    |__________    |_____|
+                                    |              |      |    |       |               |    _____ 
+                                    |______________|      |____|       |_______________|   |_____|
     )" << endl;
     changeConsoleColor(7);
 }
@@ -280,7 +280,6 @@ class Guest {
                     changeConsoleColor(10);
                     cout << "Welcome " << name;
                     login_status = true;
-                    changeConsoleColor(7);
                     break;
                 }
             }
@@ -293,7 +292,7 @@ class Guest {
                 cout << "Welcome " << name;
             }
             // Reset the console text color to the default (white)
-            changeConsoleColor(15);
+            changeConsoleColor(7);
             return login_status;
         }
         friend class Admin;
@@ -403,6 +402,7 @@ class Admin {
             else {
                 int choice;
                 do {
+                    error = false;
                     cout << "\nSelect Room Type: \n1 - Single\n2 - Double\n3 - Triple\n4 - Quadruple\nYour Choice: ";
                     cin >> choice;
                     switch (choice) {
@@ -436,8 +436,10 @@ class Admin {
                 //Add the new room to the database
                 for (int i = 0; i < room_details.size(); i++) outStream << room_details[i] << endl;
                 outStream.close();
+                changeConsoleColor(10);
                 cout << "\nRoom successfully Added\n";
                 success = true;
+                changeConsoleColor(7);
             }
         } while (!success);
 }
@@ -465,8 +467,10 @@ class Admin {
                 room_type = "Quadruple";
                 break;
             default:
-                cout << "Invalid Option";
+                changeConsoleColor(6);
+                cout << "\nInvalid Option\n";
                 isValidChoice = false;
+                changeConsoleColor(7);
                 break;
             }
         }
