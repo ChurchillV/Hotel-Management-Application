@@ -10,12 +10,17 @@
 #include <iomanip>
 using namespace std;
 
+//ASCII codes for letters used in program
+const int a = 97;
+const int g = 103;
+const int ESC = 27;
+
 //Function to change the colour of the console
 void changeConsoleColor(int colorCode) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, colorCode);
 }
-
+//Displays at the start of the program
 void intro() {
     changeConsoleColor(6);
     cout << R"( 
@@ -24,6 +29,7 @@ void intro() {
                                     |     ________|       ____            ____
                                     |    |               |    |          |    |
                                     |    |           ____|    |____  ____|    |_____
+                                    |    |          |              ||               |
                                     |    |          |____      ____||____      _____|
                                     |    |________       |    |          |    |
                                     |             |      |____|          |____|
@@ -32,6 +38,7 @@ void intro() {
                                     |     |    |     | |               | |              | |             | |     |
                                     |     |    |     | |     _____     | |____      ____| |      _______| |     |
                                     |     |____|     | |    |     |    |      |    |      |     |_______  |     |
+                                    |                | |    |     |    |      |    |      |             | |     |
                                     |                | |    |     |    |      |    |      |      _______| |     |
                                     |      ____      | |    |     |    |      |    |      |     |         |     |
                                     |     |    |     | |    |_____|    |      |    |      |     |_______  |     |_______
@@ -40,6 +47,24 @@ void intro() {
     )" << endl;
     cout << endl;
     cout << "\n\n\t\tBY: GROUP I";
+    changeConsoleColor(7);
+}
+//Displays at the end of the program
+void outro() {
+    changeConsoleColor(6);
+    cout << R"(
+                                     ______________  ______     ______  _______________     _____
+                                    |              | \     \   /     / |               |   |     |
+                                    |     ____     |  \     \-/     /  |     __________|   |     |
+                                    |    |    |    |   \           /   |    |              |     |  
+                                    |    |____|    |    \         /    |    |__________    |     |
+                                    |             /      \       /     |               |   |     |
+                                    |     ____    \       |     |      |     __________|   |     |
+                                    |    |    |    |      |     |      |    |              |     |
+                                    |    |____|    |      |     |      |    |__________    |_____|
+                                    |              |      |     |      |               |    _____ 
+                                    |______________|      |_____|      |_______________|   |_____|
+    )" << endl;
     changeConsoleColor(7);
 }
 //FUNCTION DEFINITIONS
@@ -313,24 +338,32 @@ class Admin {
     }
     //Search for a particular room by id
     void searchForRoom() {
-        string room_id;
-        cout << "\nEnter Room ID: ";
-        cin >> room_id;
-        vector<string> row = getCSVData(ROOM_DATA);
-        bool isRoomFound = false;
-        cout << "\nSearching for Room " << room_id << " ...\n";
-        loadingBarAnimation();
-        for (int i = 0; i < row.size(); i++) {
-            if (split(row[i], ',')[0] == room_id) {
-                isRoomFound = true;
-                Room room(split(row[i], ','));
-                room.displayRoomData();
-                break;
+        bool success;
+        do {
+            success = true;
+            string room_id;
+            cout << "\nEnter Room ID: ";
+            cin >> room_id;
+            vector<string> row = getCSVData(ROOM_DATA);
+            bool isRoomFound = false;
+            cout << "\nSearching for Room " << room_id << " ...\n";
+            loadingBarAnimation();
+            for (int i = 0; i < row.size(); i++) {
+                if (split(row[i], ',')[0] == room_id) {
+                    isRoomFound = true;
+                    Room room(split(row[i], ','));
+                    room.displayRoomData();
+                    success = true;
+                    break;
+                }
             }
-        }
-        if(!isRoomFound) cout << "\nRoom not found. Please try again\n";
+            if(!isRoomFound) {
+                cout << "\nRoom not found. Please try again\n";
+                success = false;
+            }
+        } while(!success);
     }
-    //Search for rooms with a status of "Unoccupied"or not yet at full capacity
+    //Search for rooms with a status of "Available"
     void searchAvailableRooms() {
         vector<string> row = getCSVData(ROOM_DATA);
         bool areRoomsFound = false;
@@ -347,57 +380,66 @@ class Admin {
     }
     //Add a room to the database
     void addRoom() {
+        bool success, error;
         string id, type, status, price, occupant_count;
-        cout << "\nEnter Room ID: ";
-        cin >> id;
-        bool doesRoomExist = false;
-        //Check if the room already exists
-        vector <string> row = getCSVData(ROOM_DATA);
-        for (int i = 0; i < row.size(); i++) {
-            vector<string> data = split(row[i], ',');
-            if(data[0] == id) {
-            doesRoomExist = true;
-            break;
+        do {
+            success = true;
+            cout << "\nEnter Room ID: ";
+            cin >> id;
+            bool doesRoomExist = false;
+            //Check if the room already exists
+            vector <string> row = getCSVData(ROOM_DATA);
+            for (int i = 0; i < row.size(); i++) {
+                vector<string> data = split(row[i], ',');
+                if(data[0] == id) {
+                doesRoomExist = true;
+                break;
+                }
             }
-        }
-        if(doesRoomExist) {cout << "\nERROR!!\nRoom already exists. Enter another ID\n";}
-        else {
-            int choice;
-            cout << "\nSelect Room Type: \n1 - Single\n2 - Double\n3 - Triple\n4 - Quadruple\nYour Choice: ";
-            cin >> choice;
-            switch (choice) {
-            {
-            case 1:
-                type = "Single";
-                price = "1000";
-                break;
-            case 2:
-                type = "Double";
-                price = "2000";
-                break;
-            case 3:
-                type = "Triple";
-                price = "3000";
-                break;
-            case 4:
-                type = "Quadruple";
-                price = "4000";
-                break;
-            default:
-                cout << "Invalid Option";
-                break;
+            if(doesRoomExist) {
+                cout << "\nERROR!!\nRoom already exists. Enter another ID\n";
+                success = false; 
             }
-        }
-            occupant_count = "0", status = "Available";
-            string new_room_data = id + "," + type+ ","  + price+ ","  + occupant_count + "," + status;
-            vector<string> room_details = getCSVData(ROOM_DATA);
-            room_details.push_back(new_room_data);
-            ofstream outStream(ROOM_DATA);
-            //Add the new room to the database
-            for (int i = 0; i < room_details.size(); i++) outStream << room_details[i] << endl;
-            outStream.close();
-            cout << "\nRoom successfully Added\n";
-    }
+            else {
+                int choice;
+                do {
+                    cout << "\nSelect Room Type: \n1 - Single\n2 - Double\n3 - Triple\n4 - Quadruple\nYour Choice: ";
+                    cin >> choice;
+                    switch (choice) {
+                    case 1:
+                        type = "Single";
+                        price = "1000";
+                        break;
+                    case 2:
+                        type = "Double";
+                        price = "2000";
+                        break;
+                    case 3:
+                        type = "Triple";
+                        price = "3000";
+                        break;
+                    case 4:
+                        type = "Quadruple";
+                        price = "4000";
+                        break;
+                    default:
+                        cout << "Invalid Option";
+                        error = true;
+                        break;
+                    } 
+                }  while(error);
+                occupant_count = "0", status = "Available";
+                string new_room_data = id + "," + type+ ","  + price+ ","  + occupant_count + "," + status;
+                vector<string> room_details = getCSVData(ROOM_DATA);
+                room_details.push_back(new_room_data);
+                ofstream outStream(ROOM_DATA);
+                //Add the new room to the database
+                for (int i = 0; i < room_details.size(); i++) outStream << room_details[i] << endl;
+                outStream.close();
+                cout << "\nRoom successfully Added\n";
+                success = true;
+            }
+        } while (!success);
 }
 //Function to get the guest's preferred room type
     void getRoomByType() {
@@ -450,27 +492,34 @@ class Admin {
     //Remove a room from the database
     void removeRoom() {
         string room_id;
-        cout << "\nEnter room ID: ";
-        cin >> room_id;
-        vector<string> row = getCSVData(ROOM_DATA);
-        bool isRoomFound = false;
-        for(int i = 0; i < row.size(); i++) {
-            vector<string> data = split(row[i], ',');
-            if(data[0] == room_id) {
-                isRoomFound = true;
-                deleteRow(row, room_id);
-                break;
+        bool success;
+        do {
+            success = true;
+            cout << "\nEnter room ID: ";
+            cin >> room_id;
+            vector<string> row = getCSVData(ROOM_DATA);
+            bool isRoomFound = false;
+            for(int i = 0; i < row.size(); i++) {
+                vector<string> data = split(row[i], ',');
+                if(data[0] == room_id) {
+                    isRoomFound = true;
+                    deleteRow(row, room_id);
+                    break;
+                }
             }
-        }
-        if(!isRoomFound) cout << "\nERROR!!\nRoom not found. Kindly make sure you entered the right ID\n";
-        else { //Update the room database
-            ofstream outStream(ROOM_DATA);
-            for(int i = 0; i < row.size(); i++) outStream << row[i] << endl;
-            outStream.close();
-            changeConsoleColor(10);
-            cout << "\nRoom removed successfully";
-            changeConsoleColor(7);
-        }
+            if(!isRoomFound) {
+                cout << "\nERROR!!\nRoom not found. Kindly make sure you entered the right ID\n";
+                success = false;
+            }
+            else { //Update the room database
+                ofstream outStream(ROOM_DATA);
+                for(int i = 0; i < row.size(); i++) outStream << row[i] << endl;
+                outStream.close();
+                changeConsoleColor(10);
+                cout << "\nRoom removed successfully";
+                changeConsoleColor(7);
+            }
+        } while (!success);
     }
 
     //Admin Methods for Guests
@@ -506,181 +555,198 @@ class Admin {
 
     void searchForGuest() {
         string name,f_name, l_name, id;
-        cout << "\nEnter Guest's first name: ";
-        cin >> f_name;
-        cout << "Enter Guest's last name: ";
-        cin>> l_name;
-        name = l_name + " " + f_name;
-        // fflush(stdin);
-        // cin.ignore();
-        cout << "Enter Guest ID: ";
-        cin >> id;
-        cout << "\nSearching for Guest...";
-        // fflush(stdin);
-        vector<string> row = getCSVData(GUEST_DATA);
-        bool isGuestFound = false;
-        for (int i = 0; i < row.size(); i++) {
-            vector<string> data = split(row[i], ',');
-            if (data[0] == id && data[1] == name) {
-                isGuestFound = true;
-                loadingBarAnimation();
-                Guest guest(data);
-                guest.getDetails();
-                break;
+        bool success;
+        do {
+            success = true;
+            cout << "\nEnter Guest's first name: ";
+            cin >> f_name;
+            cout << "Enter Guest's last name: ";
+            cin>> l_name;
+            name = l_name + " " + f_name;
+            // fflush(stdin);
+            // cin.ignore();
+            cout << "Enter Guest ID: ";
+            cin >> id;
+            cout << "\nSearching for Guest...";
+            // fflush(stdin);
+            vector<string> row = getCSVData(GUEST_DATA);
+            bool isGuestFound = false;
+            for (int i = 0; i < row.size(); i++) {
+                vector<string> data = split(row[i], ',');
+                if (data[0] == id && data[1] == name) {
+                    isGuestFound = true;
+                    loadingBarAnimation();
+                    Guest guest(data);
+                    guest.getDetails();
+                    success = true;
+                    break;
+                }
             }
-        }
-        if (!isGuestFound) {
-            changeConsoleColor(12);
-            cout << "\nGuest not found. Please try again\n";
-            changeConsoleColor(7);
+            if (!isGuestFound) {
+                changeConsoleColor(12);
+                cout << "\nGuest not found. Please try again\n";
+                changeConsoleColor(7);
+                success = false;
             }
+        } while (!success);
     }
     //Add a guest to the database
     void addGuest() {
         string f_name, l_name, name, id, contact_info, arrival_date, room_id, occupant_no;
         vector<string> guest_info;
-        int rm_id;
-        cout << "\nFirst name: ";
-        cin >> f_name;
-        fflush(stdin);
-        cout << "\nLast name: ";
-        cin >> l_name;
-        fflush(stdin);
-        name = l_name + " " + f_name;
-        cout << "Enter Guest contact info: ";
-        cin >> contact_info;
-        fflush(stdin);
-        cout << "Enter Guest ID: ";
-        fflush(stdin);
-        cin >> id;
-        // cin.ignore();
-        getRoomByType();
-        cout << "Enter preferred Room ID: ";
-        cin >> room_id;
-        fflush(stdin);
-        cout << "Enter occupant number: ";
-        cin >> occupant_no;
-        arrival_date = getCurrentDate();
-        guest_info.push_back(id);
-        guest_info.push_back(name);
-        guest_info.push_back(contact_info);
-        guest_info.push_back(room_id);
-        guest_info.push_back(arrival_date);
-        Guest new_guest(guest_info);
-        vector <string> room_data = getCSVData(ROOM_DATA);
-        string new_guest_data = id + "," + name + ","  + contact_info + "," + room_id + "," + arrival_date;
-        bool isRoomFound = false ,isRoomFull = false;
-        for (int i = 0; i < room_data.size(); i++) {
-            vector<string> data = split(room_data[i], ',');
-            if(data[0] == room_id) {
-                isRoomFound = true; 
-                if (data[4] == "Unavailable") {
-                    isRoomFull = true;
-                }
-                break;
-            }
-        }
-        if(!isRoomFound) {
-            changeConsoleColor(12);
-            cout << "ERROR!!\nRoom not found. Kindly make sure you entered the right ID\n";
-            changeConsoleColor(7);
-        }
-        else if(isRoomFull) {
-            changeConsoleColor(6);
-            cout << "\nRoom is currently Full. Please try again later\n";
-            changeConsoleColor(7);
-        }
-        else {
-            vector<string> guest_details = getCSVData(GUEST_DATA);
-            guest_details.push_back(new_guest_data);
-            ofstream outStream(GUEST_DATA);
-            //Add the new guest to the guest database
-            for (int i = 0; i < guest_details.size(); i++) {
-                outStream << guest_details[i] << endl;
-            }
-            outStream.close();
-            //Update Room database
-            room_data = getCSVData(ROOM_DATA);
-            string updatedRoomInfo;
-            for(int i = 0; i < room_data.size(); i++) {
+        bool success;
+        do {
+            int rm_id;
+            cout << "\nFirst name: ";
+            cin >> f_name;
+            fflush(stdin);
+            cout << "\nLast name: ";
+            cin >> l_name;
+            fflush(stdin);
+            name = l_name + " " + f_name;
+            cout << "Enter Guest contact info: ";
+            cin >> contact_info;
+            fflush(stdin);
+            cout << "Enter Guest ID: ";
+            fflush(stdin);
+            cin >> id;
+            // cin.ignore();
+            getRoomByType();
+            cout << "Enter preferred Room ID: ";
+            cin >> room_id;
+            fflush(stdin);
+            cout << "Enter occupant number: ";
+            cin >> occupant_no;
+            arrival_date = getCurrentDate();
+            guest_info.push_back(id);
+            guest_info.push_back(name);
+            guest_info.push_back(contact_info);
+            guest_info.push_back(room_id);
+            guest_info.push_back(arrival_date);
+            Guest new_guest(guest_info);
+            vector <string> room_data = getCSVData(ROOM_DATA);
+            string new_guest_data = id + "," + name + ","  + contact_info + "," + room_id + "," + arrival_date;
+            bool isRoomFound = false ,isRoomFull = false;
+            for (int i = 0; i < room_data.size(); i++) {
                 vector<string> data = split(room_data[i], ',');
                 if(data[0] == room_id) {
-                    updatedRoomInfo = data[0] + "," + data[1] + "," + data[2] + "," + occupant_no + ",Unavailable";
-                    deleteRow(room_data,room_id);
-                    room_data.push_back(updatedRoomInfo);
+                    isRoomFound = true; 
+                    if (data[4] == "Unavailable") {
+                        isRoomFull = true;
+                    }
                     break;
                 }
             }
-            //Update Room database
-            ofstream room_file(ROOM_DATA);
-            for(int i = 0; i < room_data.size(); i++) room_file << room_data[i] << endl;
-            room_file.close();
-            cout << "\nRegistering New Guest...\n";
-            loadingBarAnimation();
-            new_guest.getDetails();
-            changeConsoleColor(10);
-            cout << "\nGuest successfully Added\n";
-            changeConsoleColor(7);
-        }
+            if(!isRoomFound) {
+                changeConsoleColor(12);
+                cout << "ERROR!!\nRoom not found. Kindly make sure you entered the right ID\n";
+                success = false;
+                changeConsoleColor(7);
+            }
+            else if(isRoomFull) {
+                changeConsoleColor(6);
+                cout << "\nRoom is currently Full. Please try another room\n";
+                success = false;
+                changeConsoleColor(7);
+            }
+            else {
+                vector<string> guest_details = getCSVData(GUEST_DATA);
+                guest_details.push_back(new_guest_data);
+                ofstream outStream(GUEST_DATA);
+                //Add the new guest to the guest database
+                for (int i = 0; i < guest_details.size(); i++) {
+                    outStream << guest_details[i] << endl;
+                }
+                outStream.close();
+                //Update Room database
+                room_data = getCSVData(ROOM_DATA);
+                string updatedRoomInfo;
+                for(int i = 0; i < room_data.size(); i++) {
+                    vector<string> data = split(room_data[i], ',');
+                    if(data[0] == room_id) {
+                        updatedRoomInfo = data[0] + "," + data[1] + "," + data[2] + "," + occupant_no + ",Unavailable";
+                        deleteRow(room_data,room_id);
+                        room_data.push_back(updatedRoomInfo);
+                        break;
+                    }
+                }
+                //Update Room database
+                ofstream room_file(ROOM_DATA);
+                for(int i = 0; i < room_data.size(); i++) room_file << room_data[i] << endl;
+                room_file.close();
+                cout << "\nRegistering New Guest...\n";
+                loadingBarAnimation();
+                new_guest.getDetails();
+                changeConsoleColor(10);
+                cout << "\nGuest successfully Added\n";
+                success = true;
+                changeConsoleColor(7);
+            }
+        } while (!success);
     }
     //Remove a guest from the database
     void removeGuest() {
         string guest_name, f_name, l_name, guest_id;
-        cout << "Enter Guest's First name: ";
-        cin >> f_name;
-        cout << "Enter Guest's Last name: ";
-        cin >> l_name;
-        guest_name = l_name + " " + f_name;
-        cout << "Enter Guest ID: ";
-        cin >> guest_id;
-        vector<string> guest_data = getCSVData(GUEST_DATA);
-        string roomID;
-        bool isGuestFound = false;
-        loadingBarAnimation();
-        for(int i = 0; i < guest_data.size(); i++) {
-            vector<string> data = split(guest_data[i], ',');
-            if(data[0] == guest_id && data[1] == guest_name) {
-                Guest guest(data);
-                isGuestFound = true; 
-                roomID = data[3]; 
-                changeConsoleColor(10);
-                cout << "Guest Identified" << endl;
-                changeConsoleColor(7);
-                guest.getDetails();
-                break;
-            }
-        }
-        if(!isGuestFound){
-            changeConsoleColor(12);
-            cout << "\nERROR!!\nGuest not found. Kindly make sure you entered the right ID\n";
-            changeConsoleColor(7);
-        }
-        else {
-            cout << "\nPress any key to delete Guest\n" << endl;
-            int pause = getch();
+        bool success;
+        do {
+            cout << "Enter Guest's First name: ";
+            cin >> f_name;
+            cout << "Enter Guest's Last name: ";
+            cin >> l_name;
+            guest_name = l_name + " " + f_name;
+            cout << "Enter Guest ID: ";
+            cin >> guest_id;
+            vector<string> guest_data = getCSVData(GUEST_DATA);
+            string roomID;
+            bool isGuestFound = false;
             loadingBarAnimation();
-            deleteRow(guest_data, guest_id);
-            string updatedRoomInfo;
-            ofstream guest_data_update(GUEST_DATA);
-            for(int i = 0; i < guest_data.size(); i++) {guest_data_update << guest_data[i] << endl;}
-            vector<string> room_data = getCSVData(ROOM_DATA);
-            for(int i = 0; i < room_data.size(); i++) {
-                vector<string> data = split(room_data[i], ',');
-                if(data[0] == roomID) {
-                    updatedRoomInfo = data[0] + "," + data[1] + "," + data[2] + "," + "0,Available";
-                    deleteRow(room_data,roomID);
-                    room_data.push_back(updatedRoomInfo);
+            for(int i = 0; i < guest_data.size(); i++) {
+                vector<string> data = split(guest_data[i], ',');
+                if(data[0] == guest_id && data[1] == guest_name) {
+                    Guest guest(data);
+                    isGuestFound = true; 
+                    roomID = data[3]; 
+                    changeConsoleColor(10);
+                    cout << "Guest Identified" << endl;
+                    changeConsoleColor(7);
+                    guest.getDetails();
                     break;
                 }
             }
-            //Update Room database
-            ofstream room_file(ROOM_DATA);
-            for(int i = 0; i < room_data.size(); i++) {room_file << room_data[i] << endl;}
-            room_file.close();
-            changeConsoleColor(10);
-            cout << "\nGuest removed successfully";
-            changeConsoleColor(7);
-        }
+            if(!isGuestFound){
+                changeConsoleColor(12);
+                cout << "\nERROR!!\nGuest not found. Kindly make sure you entered the right details\n";
+                success = false;
+                changeConsoleColor(7);
+            }
+            else {
+                cout << "\nPress any key to delete Guest\n" << endl;
+                int pause = getch();
+                loadingBarAnimation();
+                deleteRow(guest_data, guest_id);
+                string updatedRoomInfo;
+                ofstream guest_data_update(GUEST_DATA);
+                for(int i = 0; i < guest_data.size(); i++) {guest_data_update << guest_data[i] << endl;}
+                vector<string> room_data = getCSVData(ROOM_DATA);
+                for(int i = 0; i < room_data.size(); i++) {
+                    vector<string> data = split(room_data[i], ',');
+                    if(data[0] == roomID) {
+                        updatedRoomInfo = data[0] + "," + data[1] + "," + data[2] + "," + "0,Available";
+                        deleteRow(room_data,roomID);
+                        room_data.push_back(updatedRoomInfo);
+                        break;
+                    }
+                }
+                //Update Room database
+                ofstream room_file(ROOM_DATA);
+                for(int i = 0; i < room_data.size(); i++) {room_file << room_data[i] << endl;}
+                room_file.close();
+                changeConsoleColor(10);
+                cout << "\nGuest removed successfully";
+                changeConsoleColor(7);
+            }
+
+        } while (!success);
     }
     void removeGuest(string name, string ID) {
         vector<string> guest_data = getCSVData(GUEST_DATA);

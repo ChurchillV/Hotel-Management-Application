@@ -1,158 +1,225 @@
 #include <iostream>
 #include "classes&functions.h"
 #include <conio.h>
-using namespace std;
 
-int main()
-{
-    intro();
-    cout << "\nHOTEL MANAGEMENT APPLICATION"
-        << "\n---------------------------------"
-        << "\nADMIN LOGIN - Press a"
-        << "\nGUEST LOGIN - Press g"
-        << "\nEXIT PROGRAM - Press ESC\n\n";
-        char option;
-        cout << "> > ";
-        cin >> option;
-    Admin admin1;
-    Guest guest1;
+int main() {
+    bool isProgramRunning, adminMenu, guestMenu;
+    do {
+        intro();
+        std::cout << "\nHOTEL MANAGEMENT APPLICATION"
+            << "\n---------------------------------"
+            << "\nADMIN LOGIN - Press a"
+            << "\nGUEST LOGIN - Press g"
+            << "\nEXIT PROGRAM - Press ESC\n\n";
+            int  option = getch();
+            Guest guest1;
+            Admin admin1;
+        if (option == a) {
+            bool login_success = admin1.adminLogin();
+            if(login_success) {
+            do {
+                adminMenu = false;
+                char choice;
+                std::cout << "\nPlease enter an option"
+                << "\n---------------------------------"
+                    << "\n1.  Show all rooms"
+                    << "\n2.  Search for a particular room"
+                    << "\n3.  Search for unoccupied rooms"
+                    << "\n4.  Add room"
+                    << "\n5.  Remove a room"
+                    << "\n6.  Show all guests"
+                    << "\n7.  Search for Guest"
+                    << "\n8.  Add Guest"
+                    << "\n9.  Remove Guest"
+                    << "\nb.  Back to main menu"
+                    << "\ne.  Exit\n";
+                // << "\nEnter 0 to go back\n\n";
+                std::cout << "> > ";
+                std::cin >> choice;
 
-    if (option == 'a')
-    {
-        bool login_success = admin1.adminLogin();
-        if(login_success) {
-
-        int choice;
-        char try_again = 'y';
-        while(try_again == 'y') {
-        cout << "\nPlease enter an option"
-        << "\n---------------------------------"
-            << "\n1.  Show all rooms"
-            << "\n2.  Search for a particular room"
-            << "\n3.  Search for unoccupied rooms"
-            << "\n4.  Add room"
-            << "\n5.  Remove a room"
-            << "\n6.  Show all guests"
-            << "\n7.  Search for Guest"
-            << "\n8.  Add Guest"
-            << "\n9.  Remove Guest"
-            << "\n10. Exit\n";
-           // << "\nEnter 0 to go back\n\n";
-        cout << "> > ";
-        cin >> choice;
-
-        switch (choice)
-        {
-        case 1:
-            admin1.showAllRooms();
-            break;
-
-        case 2:
-            admin1.searchForRoom();
-            break;
-
-        case 3:
-            admin1.searchAvailableRooms();
-            break;
-
-        case 4:
-            admin1.addRoom();
-            break;
-
-        case 5:
-           admin1.removeRoom();
-            break;
-
-        case 6:
-            admin1.showAllGuests();
-            break;
-
-        case 7:
-            admin1.searchForGuest();
-            break;
-
-        case 8:
-            admin1.addRoom();
-            break;
-
-        case 9:
-            admin1.removeGuest();
-            break;
-
-        case 10:
-            return 0;
-
-        default:
-            cout<< "You entered an invalid option, please try again. y/n: "<< endl;
-            cin >> try_again;
-            break;
-        }
-      }
-
-    }
-}
-    else if (option == 'g')
-    {
-        char choice;
-        do{
-            cout << "\nPlease enter an option"
-            << "\n----------------------------------"
-            << "\n1.  Search for available rooms"
-            << "\n2.  Check for personal details"
-            << "\n3.  Leave room"
-            << "\n4.  Exit\n\n";
-            string name, f_name, l_name, ID;
-            bool login_success;
-            cin >> choice;
-            switch (choice)
-            {
+                switch (choice) {
                 case '1':
-                    cout << "These are the list of rooms available"
-                        << "\n---------------------------------------";
-                    admin1.searchAvailableRooms();
-                    cout << "Perform another action?(y/n)\n > >";
-                    cin >> choice;
+                    admin1.showAllRooms();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
                     break;
+
                 case '2':
-                    cout << "Enter your first name: ";
-                    cin >> f_name;
-                    cout << "Enter your last name: ";
-                    cin >> l_name;
-                    name = l_name + " " + f_name;
-                    cout << "Enter you ID: ";
-                    cin >> ID;
-                    login_success = guest1.guestLogin(name, ID);
-                    if(login_success){
-                    admin1.searchForGuest(name, ID);
-                    cout << "Perform another action?(y/n)\n > >";
-                    cin >> choice;
-                    }
+                    admin1.searchForRoom();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
                     break;
+
                 case '3':
-                    cout << "Enter your first name: ";
-                    cin >> f_name;
-                    cout << "Enter your last name: ";
-                    cin >> l_name;
-                    name = l_name + " " + f_name;
-                    cout << "Enter you ID: ";
-                    cin >> ID;
-                    login_success = guest1.guestLogin(name, ID);
-                    if(login_success){
-                    admin1.removeGuest(name, ID);
-                    cout << "Perform another action?(y/n)\n > >";
-                    cin >> choice;
-                    }
+                    admin1.searchAvailableRooms();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
                     break;
+
                 case '4':
-                    return 0;
+                    admin1.addRoom();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
+                    break;
+
+                case '5':
+                    admin1.removeRoom();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
+                    break;
+
+                case '6':
+                    admin1.showAllGuests();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
+                    break;
+
+                case '7':
+                    admin1.searchForGuest();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
+                    break;
+
+                case '8':
+                    admin1.addRoom();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
+                    break;
+
+                case '9':
+                    admin1.removeGuest();
+                    std::cout << "Perform another task? (y/n[Back to main menu])\n> >";
+                    choice = getch();
+                    if(choice == 'n') isProgramRunning = true;
+                    else if (choice == 'y') adminMenu = true;
+                    break;
+
+                case 'b':
+                    isProgramRunning = true;
+                    break;
+
+                case 'e':
+                    isProgramRunning = false;
+                    break;
+
+                case 'y':
+                    adminMenu = true;
+                    break;
+                
+                case 'n':
+                    isProgramRunning = true;
+                    break;
 
                 default:
-                    cout<< "You entered an invalid option, please try again."<< endl;
-                    cout << "Perform another action?(y/n)\n > >";
-                    cin >> choice;
+                    std::cout<< "You entered an invalid option, please try again."<< endl;
+                    adminMenu = true;
                     break;
-            }
-        } while(choice == 'y');
+                }
+            } while(adminMenu);
+
+        }
     }
+        else if (option == g) {
+            char choice;
+            do {
+                guestMenu = false;
+                std::cout << "\nPlease enter an option"
+                << "\n----------------------------------"
+                << "\n1.  Search for available rooms"
+                << "\n2.  Check for personal details"
+                << "\n3.  Leave room"
+                << "\n4.  Back to Main Menu\n\n"
+                << "\n5.  Exit\n\n";
+                string name, f_name, l_name, ID;
+                bool login_success;
+                std::cin >> choice;
+                switch (choice)
+                {
+                    case '1':
+                        std::cout << "These are the rooms available:"
+                        << "\n---------------------------------------";
+                        admin1.searchAvailableRooms();
+                        std::cout << "Perform another action?(y/n [Back to main menu])\n > >";
+                        choice = getch();
+                        if(choice == 'n') isProgramRunning = true;
+                        else if (choice == 'y') guestMenu = true;
+                        break;
+                    case '2':
+                        std::cout << "Enter your first name: ";
+                        std::cin >> f_name;
+                        std::cout << "Enter your last name: ";
+                        std::cin >> l_name;
+                        name = l_name + " " + f_name;
+                        std::cout << "Enter you ID: ";
+                        std::cin >> ID;
+                        login_success = guest1.guestLogin(name, ID);
+                        if(login_success){
+                        admin1.searchForGuest(name, ID);
+                        std::cout << "Perform another action?(y/n [Back to main menu])\n > >";
+                        choice = getch();
+                        if(choice == 'n') isProgramRunning = true;
+                        else if (choice == 'y') guestMenu = true;
+                        }
+                        else guestMenu = true;
+                        break;
+                    case '3':
+                        std::cout << "Enter your first name: ";
+                        std::cin >> f_name;
+                        std::cout << "Enter your last name: ";
+                        std::cin >> l_name;
+                        name = l_name + " " + f_name;
+                        std::cout << "Enter you ID: ";
+                        std::cin >> ID;
+                        login_success = guest1.guestLogin(name, ID);
+                        if(login_success){
+                        admin1.removeGuest(name, ID);
+                        std::cout << "Perform another action?(y/n [Back to main menu])\n > >";
+                        choice = getch();
+                        if(choice == 'n') isProgramRunning = true;
+                        else if (choice == 'y') guestMenu = true;
+                        } else guestMenu = true;
+                        break;
+                    case '4':
+                        isProgramRunning = true;
+                        break;
+                    case '5':
+                        isProgramRunning = false;
+                        break;
+                    case 'y':
+                        guestMenu = true;
+                        break;
+                    case 'n' :
+                        isProgramRunning = true;
+                        break;
+                    default:
+                        std::cout<< "\nYou entered an invalid option, please try again.\n"<< endl;
+                        guestMenu = true;
+                        // if(choice == 'n') goto main_menu;
+                        break;
+                }
+            } while(guestMenu);
+        }
+        else if (option == ESC) {
+            isProgramRunning = false;
+        }
+
+    } while(isProgramRunning);
+    outro();
     return 0;
-    }
+}
