@@ -243,12 +243,12 @@ class Guest {
         //Function to log the guest into the application
         bool guestLogin() {
             bool login_status = false;
-            cout << "\nEnter First name: ";
+            cout << "\nEnter First name (For testing, Enter \"Vince\"): ";
             string guest_name,f_name, l_name, guest_id;
             cin >> f_name;
-            cout << "\nEnter Last name: ";
+            cout << "\nEnter Last name(For testing, Enter \"Churchill\"): ";
             cin >> l_name;
-            cout << "\nEnter ID: ";
+            cout << "\nEnter ID(For testing, Enter \"Y678\"): ";
             cin >> guest_id;
             guest_name = l_name + " " + f_name;
             vector<string> guest_database = getCSVData(GUEST_DATA);
@@ -306,10 +306,10 @@ class Admin {
     Admin() {}
     bool adminLogin() {
         bool login_status = false;
-        cout << "\nEnter Admin ID: ";
+        cout << "\nEnter Admin ID (For testing, Enter Adminho): ";
         string admin_id, admin_password;
         cin >> admin_id;
-        cout << "\nEnter password: ";
+        cout << "\nEnter password (For testing, Enter xy4567): ";
         cin >> admin_password;
         vector<string> admin_database = getCSVData(ADMIN_DATA);
         for(int i = 0; i < admin_database.size(); i++) {

@@ -41,7 +41,7 @@ int main() {
                 << "\n---------------------------------"
                     << "\n1.  Show all rooms"
                     << "\n2.  Search for a particular room"
-                    << "\n3.  Search for unoccupied rooms"
+                    << "\n3.  Search for available rooms"
                     << "\n4.  Add room"
                     << "\n5.  Remove a room"
                     << "\n6.  Show all guests"
@@ -112,7 +112,7 @@ int main() {
                     break;
 
                 case '8':
-                    admin1.addRoom();
+                    admin1.addGuest();
                     std::cout << "\nPerform another task? (y/n[Back to main menu])\n> >";
                     choice = getch();
                     if(choice == 'n') isProgramRunning = true;
@@ -134,15 +134,6 @@ int main() {
                 case 'e':
                     isProgramRunning = false;
                     break;
-
-                case 'y':
-                    adminMenu = true;
-                    break;
-                
-                case 'n':
-                    isProgramRunning = true;
-                    break;
-
                 default:
                     std::cout<< "\nYou entered an invalid option, please try again."<< endl;
                     adminMenu = true;
